@@ -1,0 +1,8 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':order-common')
+    implementation project(':order-database')
+}
