@@ -1,3 +1,5 @@
+## MAVEN
+* mvn clean install
 ## DOCKER
 * cd ./ordermanager-appliacation
 * docker build -t ordermanager .
