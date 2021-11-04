@@ -1,15 +1,15 @@
 server:
-  port: 8761
+  port: ${SERVER_PORT}
 spring:
   application:
     name: Eureka-Server1
 eureka:
   server:
-    enable-self-preservation: false # ????
+    enable-self-preservation: false # 安全機制
   instance:
-    hostname: localhost:8761  # ??Eureka Server IP
+    hostname: ${EUREKA_HOSTNAME}  # 註冊Eureka Server IP
   client:
-    register-with-eureka: true # ???Eureka Server
-    fetch-registry: true # ?Eureka????
+    register-with-eureka: true # 註冊至?Eureka Server
+    fetch-registry: true # 由Eureka取得資訊
     serviceUrl:
-      defaultZone: http://localhost:8762/eureka/ # Eureka server????
+      defaultZone: http://${EUREKA_DEFAULT_ZONE}/eureka/ # Eureka server
