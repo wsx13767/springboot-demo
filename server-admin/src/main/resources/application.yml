@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 1111
 management:
   endpoints:
     web:
@@ -7,11 +7,7 @@ management:
         include: '*'
 spring:
   application:
-    name: Server-Provider
-  boot:
-    admin:
-      client:
-        url: http://localhost:1111
+    name: Server-Admin
 eureka:
   client:
     register-with-eureka: true
