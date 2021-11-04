@@ -9,7 +9,7 @@ eureka:
   instance:
     hostname: ${EUREKA_HOSTNAME}  # 註冊Eureka Server IP
   client:
-    register-with-eureka: true # 註冊至?Eureka Server
+    register-with-eureka: true # 註冊至Eureka Server
     fetch-registry: true # 由Eureka取得資訊
     serviceUrl:
       defaultZone: http://${EUREKA_DEFAULT_ZONE}/eureka/ # Eureka server
