@@ -8,10 +8,10 @@ management:
 spring:
   application:
     name: Server-Provider
-  boot:
-    admin:
-      client:
-        url: http://localhost:1111
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:1111
 eureka:
   client:
     register-with-eureka: true
