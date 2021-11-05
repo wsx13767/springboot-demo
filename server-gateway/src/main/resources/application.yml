@@ -6,23 +6,6 @@ spring:
       discovery:
         locator:
           enabled: true
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:gateway
-    username: sa
-    password: sa
-  h2:
-    console:
-      enabled: true
-    database-platform: org.hibernate.dialect.H2Dialect
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-#  boot:
-#    admin:
-#      client:
-#        url: http://localhost:1111
 management:
   endpoints:
     web:
@@ -31,10 +14,10 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://${EUREKA_SERVER1}/eureka/,http://${EUREKA_SERVER2}/eureka/
+      defaultZone: http://${EUREKA_SERVER_HOST_ONE}/eureka/,http://${EUREKA_SERVER_HOST_TWO}/eureka/
   instance:
     prefer-ip-address: true
-    instance-id: ${HOST_IP}:${SERVER_PORT}
+    ip-address: ${EUREKA_INSTANCE_IP_ADDRESS}
 logging:
   level:
     org.springframework.cloud.gateway: debug
