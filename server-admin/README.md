@@ -8,6 +8,6 @@
 ## 介面路徑
 > 預設為 localhost:8888
 > 使用`spring.boot.admin.client.url`設定admin路徑，
-```
+```properties
 spring.boot.admin.client.url=http://localhost:8888/admin
 ```
