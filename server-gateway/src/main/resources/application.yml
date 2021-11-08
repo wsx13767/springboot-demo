@@ -5,7 +5,9 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false
+  profiles:
+    active: dev
 management:
   endpoints:
     web:
@@ -18,8 +20,5 @@ eureka:
   instance:
     prefer-ip-address: true
     ip-address: ${EUREKA_INSTANCE_IP_ADDRESS}
-logging:
-  level:
-    org.springframework.cloud.gateway: debug
 server:
   port: ${SERVER_PORT}
