@@ -29,11 +29,10 @@ public class ServerGatewayApplication {
     @Bean
     public CommandLineRunner demo(ApiRouterRepository repository) {
         return (args) -> {
-          repository.saveAll(Arrays.asList(
-                  new ApiRouter("lb://SERVER-PROVIDER", "provider", "provider_info", "/info"),
-                  new ApiRouter("lb://SERVER-PROVIDER", "provider", "provider_hello", "/hello")
-          )).blockLast(Duration.ofSeconds(10));
-            log.info("test");
+            repository.saveAll(Arrays.asList(
+                    new ApiRouter("provider_info", "lb://SERVER-PROVIDER", "provider", "/info"),
+                    new ApiRouter("provider_hello", "lb://SERVER-PROVIDER", "provider", "/hello")
+            )).blockLast(Duration.ofSeconds(10));
             repository.findAll().doOnNext(apiRouter -> {
                 log.info(apiRouter.toString());
             }).blockLast(Duration.ofSeconds(10));

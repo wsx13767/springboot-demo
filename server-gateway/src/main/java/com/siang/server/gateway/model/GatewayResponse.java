@@ -1,29 +1,11 @@
-package com.siang.server.gateway.database.entity;
+package com.siang.server.gateway.model;
 
-
-import org.springframework.data.annotation.Id;
-
-public class ApiRouter {
-    @Id
+public class GatewayResponse {
     private Integer id;
-
     private String apiId;
-
     private String uri;
-
-    private String hostName;
-
     private String path;
-
-    public ApiRouter() {
-    }
-
-    public ApiRouter(String apiId, String uri, String hostName, String path) {
-        this.apiId = apiId;
-        this.uri = uri;
-        this.hostName = hostName;
-        this.path = path;
-    }
+    private String hostName;
 
     public Integer getId() {
         return id;
@@ -49,14 +31,6 @@ public class ApiRouter {
         this.uri = uri;
     }
 
-    public String getHostName() {
-        return hostName;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
     public String getPath() {
         return path;
     }
@@ -65,14 +39,22 @@ public class ApiRouter {
         this.path = path;
     }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
     @Override
     public String toString() {
-        return "ApiRouter{" +
+        return "GatewayResponse{" +
                 "id=" + id +
                 ", apiId='" + apiId + '\'' +
                 ", uri='" + uri + '\'' +
-                ", hostName='" + hostName + '\'' +
                 ", path='" + path + '\'' +
+                ", hostName='" + hostName + '\'' +
                 '}';
     }
 }

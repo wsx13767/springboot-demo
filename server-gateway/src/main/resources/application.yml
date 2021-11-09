@@ -1,13 +1,13 @@
 spring:
   application:
-    name: server-gateway
+    name: server-gateway # 指定 eureka 註冊顯示名稱
   cloud:
     gateway:
       discovery:
         locator:
           enabled: false
   profiles:
-    active: dev
+    active: dev # spring.profiles.active 指定profile
 management:
   endpoints:
     web:
