@@ -1,48 +1,56 @@
 package com.siang.server.gateway.service;
 
+import com.google.common.collect.Lists;
 import com.siang.server.gateway.database.entity.ApiRouter;
 import com.siang.server.gateway.database.repository.ApiRouterRepository;
 import com.siang.server.gateway.model.GatewayRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "apiRouterCahce")
 public class GatewayService {
+    private static final Logger logger = LoggerFactory.getLogger(GatewayService.class);
     @Autowired
     private ApiRouterRepository apiRouterRepository;
 
-    public Flux<ApiRouter> findApiRoutes() {
-        return apiRouterRepository.findAll();
+    @Cacheable(key = "'all'")
+    public List<ApiRouter> findApiRoutes() {
+        logger.info("find all router");
+        return Lists.newArrayList(apiRouterRepository.findAll());
     }
 
-    public Mono<ApiRouter> findApiRoute(Integer id) {
-        return findAndValidateApiRouter(id);
+    public ApiRouter findApiRoute(Integer id) {
+        return apiRouterRepository.findById(id).get();
     }
 
-    public Mono<Void> createApiRouter(GatewayRequest request) {
+    @CacheEvict(key = "'all'")
+    public ApiRouter createApiRouter(GatewayRequest request) {
         ApiRouter apiRouter = setNewApiRouter(new ApiRouter(), request);
-        return apiRouterRepository.save(apiRouter).then();
+        return apiRouterRepository.save(apiRouter);
     }
 
-    public Mono<Void> updateApiRouter(Integer id, GatewayRequest request) {
-        return findAndValidateApiRouter(id)
-                .map(apiRouter -> setNewApiRouter(apiRouter, request))
-                .flatMap(apiRouterRepository::save)
-                .then();
+    @CacheEvict(key = "'all'")
+    public ApiRouter updateApiRouter(Integer id, GatewayRequest request) {
+         return apiRouterRepository
+                 .findById(id)
+                 .map(apiRouter -> setNewApiRouter(apiRouter, request))
+                 .map(apiRouterRepository::save).get();
     }
 
-    public Mono<Void> deleteRouter(Integer id) {
-        return findAndValidateApiRouter(id)
-                .flatMap(apiRouterRepository::delete);
-    }
-
-    private Mono<ApiRouter> findAndValidateApiRouter(Integer id) {
-        return apiRouterRepository.findById(id)
-                .switchIfEmpty(Mono.error(
-                        new RuntimeException(String.format("Api route with id %d not found", id))
-                ));
+    @CacheEvict(key = "'all'")
+    public void deleteRouter(Integer id) {
+        apiRouterRepository
+                .findById(id)
+                .ifPresent(apiRouterRepository::delete);
     }
 
     private ApiRouter setNewApiRouter(ApiRouter apiRouter, GatewayRequest request) {

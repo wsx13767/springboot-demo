@@ -6,6 +6,8 @@ spring:
       discovery:
         locator:
           enabled: false
+  jpa:
+    show-sql: true
   profiles:
     active: dev # spring.profiles.active 指定profile
 management:

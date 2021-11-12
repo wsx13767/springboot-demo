@@ -1,0 +1,2 @@
+insert into api_router (api_id, host_name, path, uri) values ('provider_info', 'provider', '/info', 'lb://SERVER-PROVIDER');
+insert into api_router (api_id, host_name, path, uri) values ('provider_hello', 'provider', '/hello', 'lb://SERVER-PROVIDER');

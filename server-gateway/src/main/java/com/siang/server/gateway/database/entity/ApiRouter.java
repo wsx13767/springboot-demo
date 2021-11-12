@@ -1,18 +1,21 @@
 package com.siang.server.gateway.database.entity;
 
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "api_router")
 public class ApiRouter {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @Column
     private String apiId;
-
+    @Column
     private String uri;
-
+    @Column(name = "host_name")
     private String hostName;
-
+    @Column
     private String path;
 
     public ApiRouter() {
