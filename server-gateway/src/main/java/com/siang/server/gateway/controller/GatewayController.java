@@ -1,6 +1,6 @@
 package com.siang.server.gateway.controller;
 
-import com.siang.server.gateway.database.entity.ApiRouter;
+import com.siang.server.gateway.database.entity.ApiRoute;
 import com.siang.server.gateway.model.GatewayRequest;
 import com.siang.server.gateway.model.GatewayResponse;
 import com.siang.server.gateway.service.GatewayService;
@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,13 +67,13 @@ public class GatewayController {
         return result;
     }
 
-    private GatewayResponse convert(ApiRouter apiRouter) {
+    private GatewayResponse convert(ApiRoute apiRoute) {
         GatewayResponse response = new GatewayResponse();
-        response.setId(apiRouter.getId());
-        response.setApiId(apiRouter.getApiId());
-        response.setUri(apiRouter.getUri());
-        response.setHostName(apiRouter.getHostName());
-        response.setPath(apiRouter.getPath());
+        response.setId(apiRoute.getId());
+        response.setApiId(apiRoute.getApiId());
+        response.setUri(apiRoute.getUri());
+        response.setHostName(apiRoute.getHostName());
+        response.setPath(apiRoute.getPath());
         return response;
     }
 }

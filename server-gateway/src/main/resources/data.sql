@@ -1,2 +1,2 @@
-insert into api_router (api_id, host_name, path, uri) values ('provider_info', 'provider', '/info', 'lb://SERVER-PROVIDER');
-insert into api_router (api_id, host_name, path, uri) values ('provider_hello', 'provider', '/hello', 'lb://SERVER-PROVIDER');
+insert into api_route (api_id, host_name, path, uri, before, after, status) values ('provider_info', 'provider', '/info', 'lb://SERVER-PROVIDER', null, '2021-11-12 14:10:00', false);
+insert into api_route (api_id, host_name, path, uri, before, after, status) values ('provider_hello', 'provider', '/hello', 'lb://SERVER-PROVIDER', '2021-11-12 14:10:00', null, false);

@@ -1,6 +1,5 @@
 package com.siang.server.gateway;
 
-import com.siang.server.gateway.database.entity.ApiRouter;
 import com.siang.server.gateway.database.repository.ApiRouterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
-
-import java.time.Duration;
-import java.util.Arrays;
 
 @EnableCaching
 @EnableEurekaClient

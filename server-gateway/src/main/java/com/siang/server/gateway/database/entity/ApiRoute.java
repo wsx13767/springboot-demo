@@ -2,10 +2,11 @@ package com.siang.server.gateway.database.entity;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "api_router")
-public class ApiRouter {
+@Table(name = "api_route")
+public class ApiRoute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,15 +18,24 @@ public class ApiRouter {
     private String hostName;
     @Column
     private String path;
+    @Column
+    private LocalDateTime before;
+    @Column
+    private LocalDateTime after;
+    @Column
+    private Boolean status;
 
-    public ApiRouter() {
+    public ApiRoute() {
     }
 
-    public ApiRouter(String apiId, String uri, String hostName, String path) {
+    public ApiRoute(String apiId, String uri, String hostName, String path, LocalDateTime before, LocalDateTime after, Boolean status) {
         this.apiId = apiId;
         this.uri = uri;
         this.hostName = hostName;
         this.path = path;
+        this.before = before;
+        this.after = after;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -68,14 +78,41 @@ public class ApiRouter {
         this.path = path;
     }
 
+    public LocalDateTime getBefore() {
+        return before;
+    }
+
+    public void setBefore(LocalDateTime before) {
+        this.before = before;
+    }
+
+    public LocalDateTime getAfter() {
+        return after;
+    }
+
+    public void setAfter(LocalDateTime after) {
+        this.after = after;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "ApiRouter{" +
+        return "ApiRoute{" +
                 "id=" + id +
                 ", apiId='" + apiId + '\'' +
                 ", uri='" + uri + '\'' +
                 ", hostName='" + hostName + '\'' +
                 ", path='" + path + '\'' +
+                ", before=" + before +
+                ", after=" + after +
+                ", status=" + status +
                 '}';
     }
 }
