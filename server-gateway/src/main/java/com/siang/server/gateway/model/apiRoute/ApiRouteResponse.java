@@ -1,35 +1,15 @@
-package com.siang.server.gateway.database.entity;
+package com.siang.server.gateway.model.apiRoute;
 
-
-import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "api_route")
-public class ApiRoute {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "server_id")
+public class ApiRouteResponse {
     private String serverId;
-    @Column
     private String path;
-    @Column
     private LocalDateTime before;
-    @Column
     private LocalDateTime after;
-    @Column(name = "description")
     private String desc;
-    @Column
     private Boolean status;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getServerId() {
         return serverId;
@@ -81,9 +61,8 @@ public class ApiRoute {
 
     @Override
     public String toString() {
-        return "ApiRoute{" +
-                "id=" + id +
-                ", serverId='" + serverId + '\'' +
+        return "ApiRouteResponse{" +
+                "serverId='" + serverId + '\'' +
                 ", path='" + path + '\'' +
                 ", before=" + before +
                 ", after=" + after +

@@ -1,16 +1,19 @@
 package com.siang.server.gateway.controller;
 
 import com.siang.server.gateway.database.entity.ApiRoute;
-import com.siang.server.gateway.model.GatewayRequest;
-import com.siang.server.gateway.model.GatewayResponse;
+import com.siang.server.gateway.database.entity.RouteGroup;
+import com.siang.server.gateway.model.apiRoute.ApiRouteRequest;
+import com.siang.server.gateway.model.apiRoute.ApiRouteResponse;
+import com.siang.server.gateway.model.settings.ApiServerResponse;
+import com.siang.server.gateway.model.settings.RouteGroupResponse;
 import com.siang.server.gateway.service.GatewayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,33 +28,54 @@ public class GatewayController {
     @Autowired
     private ConcurrentMapCacheManager cacheManager;
 
+    @GetMapping("/all")
+    public List<RouteGroupResponse> findAllSettings() {
+        List<RouteGroupResponse> responses = new ArrayList<>();
+        List<RouteGroup> routeGroups = gatewayService.findGroups();
+        routeGroups.forEach(
+                routeGroup -> {
+                    RouteGroupResponse response = new RouteGroupResponse(routeGroup);
+                    response.setApiServers(gatewayService.findServerByGroupId(routeGroup.getId()).stream().map(
+                            apiServer -> {
+                                ApiServerResponse apiServerResponse = new ApiServerResponse(apiServer);
+                                apiServerResponse.setApiRoutes(gatewayService.findApiRoutesByServerId(apiServer.getId()));
+                                return apiServerResponse;
+                            }
+                    ).collect(Collectors.toList()));
+                    responses.add(response);
+                }
+        );
+        return responses;
+    }
+
     @GetMapping
-    public List<GatewayResponse> findApiRoutes() {
+    public List<ApiRouteResponse> findApiRoutes() {
         return gatewayService.findApiRoutes().stream()
-                .map(this::convert)
+                .map(this::convertApiRoute)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public GatewayResponse findApiRouter(@PathVariable Integer id) {
-        return convert(gatewayService.findApiRoute(id));
-    }
-
-    @PostMapping
-    public GatewayResponse createApiRouter(@RequestBody @Validated GatewayRequest request) {
-        return convert(gatewayService.createApiRouter(request));
+    public ApiRouteResponse findApiRoute(@PathVariable Integer id) {
+        ApiRouteResponse response = new ApiRouteResponse();
+        ApiRoute route = gatewayService.findApiRouteById(id);
+        return convertApiRoute(route);
     }
 
     @PutMapping("/{id}")
-    public GatewayResponse updateApiRouter(@PathVariable Integer id, @RequestBody @Validated GatewayRequest request) {
-        return convert(gatewayService.updateApiRouter(id, request));
+    public ApiRouteResponse updateApiRoute(@PathVariable Integer id, @RequestBody ApiRouteRequest request) {
+        return convertApiRoute(gatewayService.updateApiRouter(id, request));
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteApiRouter(@PathVariable Integer id) {
-        gatewayService.deleteRouter(id);
-
-        return "delete success";
+    private ApiRouteResponse convertApiRoute(ApiRoute route) {
+        ApiRouteResponse response = new ApiRouteResponse();
+        response.setServerId(route.getServerId());
+        response.setPath(route.getPath());
+        response.setStatus(route.getStatus());
+        response.setDesc(route.getDesc());
+        response.setBefore(route.getBefore());
+        response.setAfter(route.getAfter());
+        return response;
     }
 
     @GetMapping("/cacheManager")
@@ -65,15 +89,5 @@ public class GatewayController {
         ).count();
 
         return result;
-    }
-
-    private GatewayResponse convert(ApiRoute apiRoute) {
-        GatewayResponse response = new GatewayResponse();
-        response.setId(apiRoute.getId());
-        response.setApiId(apiRoute.getApiId());
-        response.setUri(apiRoute.getUri());
-        response.setHostName(apiRoute.getHostName());
-        response.setPath(apiRoute.getPath());
-        return response;
     }
 }
