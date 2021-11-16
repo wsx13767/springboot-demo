@@ -1,0 +1,14 @@
+spring:
+  security:
+    user:
+      name: user
+      password: 123
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+server:
+  port: 8787
+#logging:
+#  level:
+#    root: DEBUG
