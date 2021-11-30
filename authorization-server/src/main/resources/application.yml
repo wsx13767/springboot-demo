@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG
+#okta:
+#  oauth2:
+#    issuer: https://dev-133337.okta.com/oauth2/default
+#    client-id: 0oab8eb55Kb9jdMIr5d6
+#    client-secret: NEVER-SHOW-SECRETS

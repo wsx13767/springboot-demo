@@ -33,6 +33,21 @@
 
   
 
+### 不經過Security
+
+```java
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+  @Override
+  protected void configure(WebSecurity web) throws Exception {
+    web.ignoring()
+    	.antMatchers("/login.html", "/css/**", "/js/**", "/images/**"); // 靜態資源或登入頁面不需經過security
+  }
+}
+```
+
+
+
 ### 使用者訊息
 
 * `SecurityContextHolder.java`可以取得`Authentication`
@@ -78,3 +93,61 @@
   ```
 
   
+
+### 加上filter
+
+* 可將帳號密碼放至request body並傳送
+
+  ```java
+  // ...
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+  	// ...
+  	http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+  }
+  //...
+  ```
+
+  
+
+### session 設定
+
+ ```java
+ @Override
+ protected void configure(HttpSecurity http) throws Exception {
+   http.authorizeRequests()
+   .anyRequest().authenticated()
+   .and()
+   .formLogin()
+   .and()
+   .csrf().disable()
+   .sessionManagement()// 開啟session管理
+   .maximumSessions(1) // 限制只能建立一個session
+   .maxSessionsPreventsLogin(true); // 當客戶已登入，就無法再由其他地方登入
+ }
+ ```
+
+* 簡易使用docker建立redis
+
+  ```bash
+  docker pull redis
+  docker run -p 6379:6379 --name redis -d redis --requirepass "123"
+  ################# 測試
+  docker exec -it redis redis-cli -a 123
+  set msg Hello
+  get msg
+  ```
+
+* Cookie設定
+
+  ```java
+  @Bean
+  public CookieSerializer cookieSerializer() {
+    DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+    cookieSerializer.setSameSite("strict");
+    return cookieSerializer;
+  }
+  ```
+
+  
+

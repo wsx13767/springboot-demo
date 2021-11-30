@@ -1,7 +1,21 @@
 eureka:
   client:
+    enabled: false
     service-url:
       defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
   instance:
     prefer-ip-address: true
     ip-address: localhost # docker 改IP
+spring:
+  redis:
+    password: 123
+    host: 127.0.0.1
+    port: 6379
+#server:
+#  ssl:
+#    port: 8443
+#    key-store: classpath:keystore.jks
+#    key-store-password: 123456
+#    key-alias: localhost
+#    key-password: 123456
+#    enabled: true
