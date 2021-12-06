@@ -151,3 +151,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   
 
+## Redis
+
+### RedisTemplate 設定
+
+```java
+@Bean
+public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+  StringRedisSerializer keySerializer = new StringRedisSerializer();
+  RedisSerializer<Object> valueSerializer = new GenericJackson2JsonRedisSerializer();
+
+  RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+  redisTemplate.setConnectionFactory(redisConnectionFactory);
+  redisTemplate.setKeySerializer(keySerializer); // 設定key serializer
+  redisTemplate.setHashKeySerializer(keySerializer);// 設定key serializer
+  redisTemplate.setValueSerializer(valueSerializer);
+  redisTemplate.setHashValueSerializer(valueSerializer);
+  return redisTemplate;
+}
+```
+

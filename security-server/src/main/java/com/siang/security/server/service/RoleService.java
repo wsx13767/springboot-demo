@@ -10,14 +10,17 @@ import com.siang.security.server.database.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +35,7 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
-    private ConcurrentMapCacheManager cacheManager;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Cacheable(key = "'Menu.all'")
     public List<Menu> allMenu() {
@@ -51,22 +52,17 @@ public class RoleService {
         return roleRepository.findAllById(ids);
     }
 
-    @CacheEvict(key = "'Role.list*'")
-    @Scheduled(fixedDelay = 60 * 1000, initialDelay = 500)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 500)
     public void clearRoleList() {
-
-
-        Map map = (Map) cacheManager.getCache("User_Role_Menu_CacheConfig").getNativeCache();
-
-        for (Object key : map.keySet()) {
-            logger.info("{}", key);
-        }
-
-
         redisTemplate.keys("*").forEach(
-                key -> logger.info("{}", key)
+                key -> {
+                    logger.info("{}", key);
+                    if (key.startsWith("User_Role_Menu_CacheConfig::Role.list")) {
+                        redisTemplate.delete(key);
+                    }
+                }
         );
-        redisTemplate.delete("User_Role_Menu_CacheConfig::Role.list*");
+
         logger.info("clear role list");
     }
 
