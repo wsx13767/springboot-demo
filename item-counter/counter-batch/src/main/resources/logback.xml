@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <!-- 於application.properties設定屬性
+    <springProperty scope="context" name="kafka.servers" source="spring.kafka.appender.bootstrap.servers" />
+    <springProperty scope="context" name="kafka.topic" source="spring.kafka.appender.topic" />
+    -->
+    <!-- 屬性設定 -->
+    <property name="LOG_PATH" value="/Users/user/Documents/logs/counter-batch" />
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{USER_IP} %-5level %logger{36}.%method:%line - %msg%n" />
+    <property name="FILE_NAME" value="console" />
+    <!-- 控制台console -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/${FILE_NAME}.log</File>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <!-- kafka log 目前暫時用不到 -->
+    <!--
+    <appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <encoder encoder="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                            "level": "%level",
+                            "thread": "%thread",
+                            "class": "%logger{40}",
+                            "method": "%method",
+                            "line": "%line",
+                            "message": "%message",
+                            "stack_trace": "%exception{10}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <topic>${kafka.topic}</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.HostNameKeyingStrategy" />
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy" />
+        <producerConfig>bootstrap.servers=${kafka.servers}</producerConfig>
+    </appender>
+     -->
+    <!-- 以非同步方式上送log -->
+    <appender name="Async" class="ch.qos.logback.classic.AsyncAppender">
+        <!--
+        <springProfile name="prod">
+            <appender-ref ref="kafkaAppender" />
+        </springProfile>
+        -->
+        <queueSize>512</queueSize>
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <logger name="org.apache.kafka.streams.processor.internals" level="error"/>
+    <logger name="org.apache.kafka.clients" level="error"/>
+    <logger name="org.apache.kafka.common.utils" level="error"/>
+
+    <root level="info">
+        <appender-ref ref="console"/>
+        <appender-ref ref="Async"/>
+    </root>
+</configuration>

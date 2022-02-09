@@ -1,0 +1,19 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: eureka
+eureka:
+  server:
+    enable-self-preservation: false # 安全機制
+#  instance:
+#    prefer-ip-address: true
+#    hostname: localhost
+  client:
+    register-with-eureka: true # 註冊至Eureka Server
+    fetch-registry: true # 由Eureka取得資訊
+#    service-url:
+#      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+springfox:
+  documentation:
+    auto-startup: false

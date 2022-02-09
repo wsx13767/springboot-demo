@@ -1,0 +1,69 @@
+services:
+#  redis設定
+  evo-redis:
+    image: redis:latest
+    container_name: evo-redis
+    restart: unless-stopped
+#    mysql 相關設定
+  mysql-db:
+    image: mysql:8.0.23
+    container_name: mysql-db
+    restart: unless-stopped
+    platform: linux/amd64
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: mysqldb
+      MYSQL_USER: siang
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      LANG: C.UTF-8
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+  eureka-server:
+    build:
+      context: ./eureka
+    ports:
+      - 8761:8761
+    container_name: eureka-server
+    restart: unless-stopped
+  counter-api:
+    build:
+      context: ./counter-api
+    container_name: counter-api
+    restart: unless-stopped
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/mysqldb?serverTimezone=Asia/Taipei&characterEncoding=utf-8
+      - EVOLUTIVELABS_REDIS_HOSTNAME=evo-redis
+    depends_on:
+      - eureka-server
+      - evo-redis
+      - mysql-db
+  batch:
+    build:
+      context: ./counter-batch
+    container_name: batch
+    restart: unless-stopped
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/mysqldb?serverTimezone=Asia/Taipei&characterEncoding=utf-8
+      - EVOLUTIVELABS_REDIS_HOSTNAME=evo-redis
+    depends_on:
+      - eureka-server
+      - evo-redis
+      - mysql-db
+  gateway:
+    build:
+      context: ./gateway
+    container_name: gateway
+    restart: unless-stopped
+    ports:
+      - 80:80
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+      - counter-api
+      - batch
