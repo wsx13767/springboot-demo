@@ -1,9 +1,8 @@
 server:
-  port: 8080
-
+  port: 8081
 spring:
   application:
-    name: hello-service
+    name: todo-service
 
 eureka:
   client:
@@ -13,6 +12,6 @@ eureka:
 
 springdoc:
   swagger-ui:
-    enabled: false # Disabling the swagger-ui
+    enabled: true # Disabling the swagger-ui
   api-docs:
     enabled: true # Disabling the /v3/api-docs endpoint
