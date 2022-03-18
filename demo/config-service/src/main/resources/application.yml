@@ -3,3 +3,10 @@ server:
 spring:
   profiles:
     active: native  # 讀取本地端
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations:
+            - classpath:/common
+            - classpath:/config

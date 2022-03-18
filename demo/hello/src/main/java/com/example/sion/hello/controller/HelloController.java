@@ -13,6 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/hello")
 @RestController
 public class HelloController {
+    @Value("${SION_HELLOWORLD:test}")
+    private String test;
+    
+    @Value("${sion.helloWorld:test2}")
+    private String test2;
+    
+    @GetMapping(value = "/test", produces = "application/vnd.spring-cloud.config-server.v2+json")
+    public String hello1() {
+        return test;
+    }
+    
+    @GetMapping(value = "/test", produces = "application/vnd.spring-cloud.config-server.v2+xml")
+    public String hello2() {
+        return test2;
+    }
+
 
     @Operation(summary = "Hello name",description = "response Hello, ${name}")
     @GetMapping("/{name}")

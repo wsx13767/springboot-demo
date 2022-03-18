@@ -5,7 +5,6 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.SwaggerUiConfigParameters;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,16 +31,16 @@ public class OpenApiConfig {
         };
     }
 
-    @Bean
-    public OpenAPI openAPI() {
-        return new OpenAPI()
-                .info(new Info().title("gateway openapi")
-                        .description("test")
-                        .version("1.0.0")
-                        .contact(new Contact()
-                                .name("name")
-                                .email("test@fadsa.casc")));
-    }
+//    @Bean
+//    public OpenAPI openAPI() {
+//        return new OpenAPI()
+//                .info(new Info().title("gateway openapi")
+//                        .description("test")
+//                        .version("1.0.0")
+//                        .contact(new Contact()
+//                                .name("name")
+//                                .email("test@fadsa.casc")));
+//    }
 
 
 }

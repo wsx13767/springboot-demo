@@ -1,0 +1,23 @@
+server:
+  port: 80
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: openapi
+          uri: http://localhost
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}-SERVICE/v3/api-docs
+
+springdoc:
+  swagger-ui:
+    #    use-root-path: true
+    enabled: true # Disabling the swagger-ui
+  api-docs:
+    enabled: true # Disabling the /v3/api-docs endpoint
