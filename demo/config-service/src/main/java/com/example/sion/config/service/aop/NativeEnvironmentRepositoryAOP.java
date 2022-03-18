@@ -3,6 +3,7 @@ package com.example.sion.config.service.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertyValueDescriptor;
 import org.springframework.core.env.StandardEnvironment;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 @Aspect
 @Component
-//@ConditionalOnBean(NativeEnvironmentRepository.class) TODO: 加上後無法作用，但確定NativeEnvironmentRepository bean已經在beanFactory
+@ConditionalOnProperty("sion.application.properties.env.enabled")
 public class NativeEnvironmentRepositoryAOP {
 
     @Around("execution(public * org.springframework.cloud.config.server.environment.NativeEnvironmentRepository.findOne(..))")
@@ -36,7 +37,6 @@ public class NativeEnvironmentRepositoryAOP {
                                 } else {
                                     value = standardEnvironment.resolvePlaceholders(obj.toString());
                                 }
-
                                 entry.setValue(value);
                             });
                 }

@@ -10,3 +10,9 @@ spring:
           searchLocations:
             - classpath:/common
             - classpath:/config
+
+sion:
+  application:
+    properties:
+      env:
+        enabled: true
